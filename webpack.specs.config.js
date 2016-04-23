@@ -5,15 +5,16 @@ var autoprefixer = require('autoprefixer')
 
 module.exports = {
   devtool: 'eval',
+  target: 'node',
   entry: [
-    'webpack-dev-server/client?http://localhost:3000',
-    './app/index'
+    './app/specs'
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'specs.js'
   },
   plugins: [
+    new webpack.IgnorePlugin(/ReactContext/),
     new ExtractTextPlugin('style.css', { allChunks: true })
   ],
   module: {
@@ -27,12 +28,16 @@ module.exports = {
       {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[local]_[hash:base64:5]!postcss!sass')
+      },
+      {
+        test: /\.json$/,
+        loader: 'json'
       }
     ]
   },
   postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ],
   resolve: {
-    extensions: [ '', '.js', '.scss', '.css' ],
+    extensions: [ '', '.js', '.scss', '.css', '.json' ],
     modulesDirectories: [ 'app', 'node_modules' ]
   }
 }
